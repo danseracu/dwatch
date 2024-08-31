@@ -1,4 +1,4 @@
-name: DWatch.Server
+name: DWatch.Monitor
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
     paths:
     - dwatch.monitor/**
-    - .github/workflows/server.yml
+    - .github/workflows/monitor.yml
   
   pull_request:
     branches:
@@ -16,7 +16,7 @@ on:
 
     paths:
     - dwatch.monitor/**
-    - .github/workflows/server.yml
+    - .github/workflows/monitor.yml
 
 jobs:
 
