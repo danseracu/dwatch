@@ -1,24 +1,20 @@
-FROM golang:alpine AS builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:alpine AS builder
 WORKDIR /app
 
-# COPY go.* ./
-
-# RUN go mod download
-
-# COPY *.go ./
-
-# RUN go build -o /dwatch_server
+ARG TARGETARCH
+ARG BUILDPLATFORM
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
-    GOARCH=amd64
+    GOARCH=${TARGETARCH}
 
 COPY ./server.go .
 
 RUN go build -o server ./server.go
 
-FROM gcr.io/distroless/base-debian10
+#FROM gcr.io/distroless/base-debian12
+FROM --platform=${BUILDPLATFORM:-linux/amd64} scratch
 
 WORKDIR /
 
