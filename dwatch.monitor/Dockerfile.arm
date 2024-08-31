@@ -1,14 +1,17 @@
-FROM --platform=${BUILDPLATFORM:-linux/arm64} python:alpine as deps
-ARG BUILDPLATFORM
-
+FROM --platform=${BUILDPLATFORM:-linux/arm64} python as deps
 WORKDIR /app
+
+ARG BUILDPLATFORM
+ARG TARGETARCH
 
 ADD requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-FROM deps as run
+FROM --platform=${BUILDPLATFORM:-linux/amd64} arm64v8/python
 
 WORKDIR /app
+
+COPY --from=deps /app .
 
 ADD monitor.py .
 
