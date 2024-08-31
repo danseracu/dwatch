@@ -1,4 +1,4 @@
-name: DWatch.Monitor
+name: DWatch.Server
 
 on:
   workflow_dispatch:
@@ -7,16 +7,16 @@ on:
     - main
 
     paths:
-    - dwatch.monitor/**
-    - .github/workflows/monitor.yml
+    - dwatch.server/**
+    - .github/workflows/server.yml
   
   pull_request:
     branches:
-    - main
+    - master
 
     paths:
-    - dwatch.monitor/**
-    - .github/workflows/monitor.yml
+    - dwatch.server/**
+    - .github/workflows/server.yml
 
 jobs:
 
@@ -43,11 +43,11 @@ jobs:
     - name: Build and push multi-architecture image
       uses: docker/build-push-action@v5
       with:
-        context: ./dwatch.monitor
+        context: ./dwatch.server
         push: true
         tags: |
-          dwatch/monitor:latest-amd64
-          dwatch/monitor:latest-arm64
-          dwatch/monitor:${{ github.run_number }}-amd64
-          dwatch/monitor:${{ github.run_number }}-arm64
+          dwatch/server:latest-amd64
+          dwatch/server:latest-arm64
+          dwatch/server:${{ github.run_number }}-amd64
+          dwatch/server:${{ github.run_number }}-arm64
         platforms: linux/amd64,linux/arm64
