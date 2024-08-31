@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM:-linux/arm64} python as deps
+FROM --platform=${BUILDPLATFORM:-linux/amd64} python as deps
 WORKDIR /app
 
 ARG BUILDPLATFORM
@@ -7,11 +7,11 @@ ARG TARGETARCH
 ADD requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-FROM --platform=${BUILDPLATFORM:-linux/amd64} arm64v8/python
+# FROM --platform=${BUILDPLATFORM:-linux/amd64} arm64v8/python
 
-WORKDIR /app
+#WORKDIR /app
 
-COPY --from=deps /app .
+#COPY --from=deps /app .
 
 ADD monitor.py .
 
