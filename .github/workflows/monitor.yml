@@ -48,10 +48,9 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./dwatch.monitor
-        push: ${{ env.needToPush }}
+        #push: ${{ env.needToPush }}
+        push: true
         tags: |
-          dwatch/monitor:latest-amd64
-          dwatch/monitor:latest-arm64
-          dwatch/monitor:${{ github.run_number }}-amd64
-          dwatch/monitor:${{ github.run_number }}-arm64
-        platforms: linux/amd64,linux/arm64
+          dwatch/monitor:latest
+          dwatch/monitor:${{ github.run_number }}
+        platforms: linux/amd64,linux/arm64,linux/arm64v8
