@@ -1,4 +1,5 @@
-FROM python:alpine as deps
+FROM --platform=${BUILDPLATFORM:-linux/arm64} python:alpine as deps
+ARG BUILDPLATFORM
 
 WORKDIR /app
 

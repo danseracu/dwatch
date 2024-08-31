@@ -53,4 +53,16 @@ jobs:
         tags: |
           dwatch/monitor:latest
           dwatch/monitor:${{ github.run_number }}
-        platforms: linux/amd64,linux/arm64,linux/arm64v8
+        platforms: linux/amd64
+
+    - name: Build and push multi-architecture image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./dwatch.monitor
+        file: ./dwatch.monitor/Dockerfile.arm
+        #push: ${{ env.needToPush }}
+        push: true
+        tags: |
+          dwatch/monitor:latest-arm
+          dwatch/monitor:${{ github.run_number }}-arm
+        platforms: linux/arm64,linux/arm64v8
