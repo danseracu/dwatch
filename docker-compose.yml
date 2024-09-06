@@ -7,13 +7,27 @@ services:
     ports:
       - 8301:8080
     container_name: dwatch-server
-  dwatch.monitor:
+
+  dwatch.checker:
     build:
-      context: ./dwatch.monitor
+      context: ./dwatch.checker
       dockerfile: Dockerfile
-    image: dwatch/monitor
-    container_name: dwatch-monitor
+    image: dwatchnet
+    container_name: dwatch-checker
     environment:
       - HEALTHCHECK_URL=http://dwatch-server:8080
+      - CHECK_TIME=1
+      - DEVICE_IP=10.1.1.224
     env_file:
       - keys.env
+
+  # dwatch.monitor:
+  #   build:
+  #     context: ./dwatch.monitor
+  #     dockerfile: Dockerfile
+  #   image: dwatch/monitor
+  #   container_name: dwatch-monitor
+  #   environment:
+  #     - HEALTHCHECK_URL=http://dwatch-server:8080
+  #   env_file:
+  #     - keys.env

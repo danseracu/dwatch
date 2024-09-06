@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "dwatch.checker": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
