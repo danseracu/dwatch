@@ -50,8 +50,6 @@ jobs:
         context: ./dwatch.server
         push: ${{ env.needToPush }}
         tags: |
-          dwatch/server:latest-amd64
-          dwatch/server:latest-arm64
-          dwatch/server:${{ github.run_number }}-amd64
-          dwatch/server:${{ github.run_number }}-arm64
+          dwatch/server:latest
+          dwatch/server:${{ github.run_number }}
         platforms: linux/amd64,linux/arm64

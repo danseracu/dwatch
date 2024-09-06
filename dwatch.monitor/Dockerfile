@@ -1,37 +1,28 @@
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:alpine AS builder
+WORKDIR /app
 
-FROM --platform=${BUILDPLATFORM:-linux/amd64} docker.io/python:3.11 AS build
+ARG TARGETARCH
 ARG BUILDPLATFORM
 
-WORKDIR "/app"
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=${TARGETARCH}
 
-ADD requirements.txt .
+COPY . .
 
-ENV PYTHONUNBUFFERED=1
+RUN echo "goarch: $GOARCH"
+RUN echo "paltform: $BUILDPLATFORM"
+RUN echo "tarch: $TARGETARCH"
 
-# Install dependecies
-# hadolint ignore=DL3008,DL3013
-RUN set -eux && \
-    apt-get update; \
-    apt-get install --no-install-recommends -y \
-        python3-dev build-essential patchelf; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*; \
-    python -m pip install --no-cache-dir --upgrade --force --ignore-installed pip; \
-    python -m pip install --no-cache-dir --upgrade -r requirements.txt; \
-    python -m pip install --no-cache-dir --upgrade wheel staticx pyinstaller;
-
-ADD monitor.py .
-
-RUN set -eux && \
-    pyinstaller --name hw-compiled --onefile monitor.py --paths "$(python -m site --user-site)"; \
-    staticx --strip dist/hw-compiled dist/hw; \
-    strip -s -R .comment -R .gnu.version --strip-unneeded dist/hw; \
-    rm dist/hw-compiled; \
-    mkdir -p dist/tmp
+RUN go mod download
+RUN go build -o out ./main.go
 
 FROM --platform=${BUILDPLATFORM:-linux/amd64} scratch
-COPY --from=build /app/dist/ /
 
-ENV PYTHONUNBUFFERED=1
+WORKDIR /
 
-ENTRYPOINT ["/hw"]
+COPY --from=builder /app/out /dwatch_monitor
+
+#EXPOSE 8080
+ENTRYPOINT ["/dwatch_monitor"]
