@@ -11,6 +11,10 @@ ENV GO111MODULE=on \
 
 COPY . .
 
+RUN echo "$GOARCH"
+RUN echo "$BUILDPLATFORM"
+RUN echo "$TARGETARCH"
+
 RUN go mod download
 RUN go build -o out ./main.go
 
