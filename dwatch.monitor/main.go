@@ -21,11 +21,8 @@ var password = os.Getenv("PASSWORD")
 var url string
 var sleepTime int
 
-//var url = os.Getenv("HEALTHCHECK_URL")
-//var sleepTime = os.Getenv("CHECK_TIME")
-
 func main() {
-	fmt.Println("Starting app")
+	log.Println("Starting app")
 
 	if val, ok := os.LookupEnv("HEALTHCHECK_URL"); ok {
 		url = val
@@ -36,7 +33,7 @@ func main() {
 	if val, ok := os.LookupEnv("CHECK_TIME"); ok {
 		sleepTime, _ = strconv.Atoi(val)
 	} else {
-		sleepTime = 15
+		sleepTime = 5
 	}
 
 	go loop()
@@ -45,7 +42,7 @@ func main() {
 }
 
 func reset() {
-	fmt.Println("Resetting device")
+	log.Println("Resetting device")
 	client, err := tapogo.NewTapo(ip, username, password, &tapogo.TapoOptions{})
 
 	if err != nil {
@@ -54,7 +51,7 @@ func reset() {
 		return
 	}
 
-	fmt.Println("Turning off")
+	log.Println("Turning off")
 
 	_, err = client.TurnOff()
 
@@ -66,7 +63,7 @@ func reset() {
 
 	time.Sleep(10 * time.Second)
 
-	fmt.Println("Turning on")
+	log.Println("Turning on")
 
 	_, err = client.TurnOn()
 
@@ -78,14 +75,13 @@ func reset() {
 }
 
 func loop() {
-	fmt.Println("Starting loop")
+	log.Println("Starting loop")
 
 	for {
 		if isServerUp() {
-			fmt.Println("Server is up")
-			//return
+			log.Println("Server is up")
 		} else {
-			fmt.Println("Server is not up")
+			log.Println("Server is not up")
 			reset()
 		}
 
@@ -94,18 +90,18 @@ func loop() {
 }
 
 func sleep() {
-	fmt.Println("Sleeping")
+	log.Println("Sleeping")
 
-	time.Sleep(time.Duration(sleepTime) * time.Second)
+	time.Sleep(time.Duration(sleepTime) * time.Minute)
 }
 
 func isServerUp() bool {
-	fmt.Println("Checking server")
+	log.Println("Checking server")
 
 	resp, err := http.Get(url)
 
 	if err != nil {
-		fmt.Print(err.Error())
+		log.Println(err.Error())
 		return false
 	}
 

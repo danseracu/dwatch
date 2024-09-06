@@ -48,8 +48,8 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./dwatch.monitor
-        #push: ${{ env.needToPush }}
-        push: true
+        push: ${{ env.needToPush }}
+        #push: true
         tags: |
           dwatch/monitor:latest
           dwatch/monitor:${{ github.run_number }}
